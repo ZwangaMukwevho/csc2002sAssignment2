@@ -29,12 +29,9 @@ public class Flow  {
 		
     	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(new BorderLayout());
-		//frame.getContentPane().addMouseListener(new MouseClick());
     	
 		  JPanel g = new JPanel();
-		//g.addMouseListener(new MouseClick());
-		System.out.println(landdata.getDimX()+ " land_data_x");
-		System.out.println(landdata.getDimY()+ " land_data_y");
+		
         g.setLayout(new BoxLayout(g, BoxLayout.PAGE_AXIS)); 
 		fp = new FlowPanel(landdata);
 		fp.addMouseListener(new MouseClick(fp));
@@ -58,6 +55,15 @@ public class Flow  {
 			public void actionPerformed(ActionEvent e){
 				// to do ask threads to stop
 				frame.dispose();
+			}
+		});
+
+		playB.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				// to do ask threads to stop
+				Thread fpt = new Thread(fp);
+        		fpt.start();
+				
 			}
 		});
 
@@ -90,8 +96,7 @@ public class Flow  {
       	frame.add(g); //add contents to window
         frame.setContentPane(g);
         frame.setVisible(true);
-        Thread fpt = new Thread(fp);
-        fpt.start();
+        
 	}
 	
 		

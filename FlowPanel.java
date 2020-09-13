@@ -11,7 +11,11 @@ import java.util.*;
 
 public class FlowPanel extends JPanel implements Runnable {
 	Terrain land ;
-	
+	static int startFlow = 0;
+	int [] newPos = new int[2];
+	int x;
+	int y;
+
 	FlowPanel(Terrain terrain) {
 		land=terrain;
 	}
@@ -22,8 +26,6 @@ public class FlowPanel extends JPanel implements Runnable {
     protected void paintComponent(Graphics g) {
 		int width = getWidth();
 		int height = getHeight();
-		System.out.println(width);
-		System.out.println(height);
 		  
 		super.paintComponent(g);
 		g.setColor(Color.BLUE);
@@ -36,23 +38,86 @@ public class FlowPanel extends JPanel implements Runnable {
 		}
 	}
 
-	private List<water> Water = new LinkedList<water>();
+	private ArrayList<water> Water = new ArrayList<water>();
+	private ArrayList<water> Water2 = new ArrayList<water>();
+	waterPainter waterPobj = new waterPainter();
+	water waterObj;
+	water waterObj2;
+	int check = 0;
+	String fileName = "medsample_in.txt";
+	int[][] depthArray = waterPobj.waterDepArray();
+	int tempDepth;
 
-	public void addWater(water W){
-		Water.add(W);
-		//this.repaint();
+	
+	public void readData(){
+		land.readData(fileName);
 	}
+	
+	public void addWater(water W){
+		W.setWaterDepth();
+		Water.add(W);
+		
+		this.repaint();
+	}
+	
+	
+	
+	public void flow() {
 
+	
+		startFlow = 1;
+		waterObj = Water.get(0);
+			x = waterObj.getX();
+			y = waterObj.getY();
+	
+			for(int i = 0; i<100;i++){
+	
+				if(check == 0){
+					depthArray[x][y] = waterObj.getWaterDepth();
+					System.out.println(depthArray[x][y]+" "+x+" "+y);
+					newPos = waterPobj.compare(x, y,fileName );
+					//System.out.println(y+ " "+x);
+					check = 1;
+				}
+				else{
+					try{
+					newPos = waterPobj.compare(newPos[0], newPos[1],fileName );}
+					catch(Exception e){
+						;
+					}
+				}
+				waterObj2 = new water(newPos[0],newPos[1]);
+				Water2.add(waterObj2);
+			
+				this.repaint();
+							}
+	
+		}
+	
+		
+	
 	@Override 
 	public void paint(Graphics g){
+		if (startFlow == 0){
+		g.drawImage(land.getImage(), 0, 0, null);
 		for (water waterObject: Water){
 			waterObject.draw(g);
+		}}
+		else{
+			
+			g.drawImage(land.getImage(), 0, 0, null);
+			for (water waterObject1: Water2){
+				waterObject1.drawFlow(g);
+				
+			}
 		}
 	}
 	
 	public void run() {	
 		// display loop here
 		// to do: this should be controlled by the GUI		// to allow stopping and starting
+		flow();
+
 	    repaint();
 	}
 

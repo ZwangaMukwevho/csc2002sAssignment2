@@ -8,6 +8,7 @@ import java.util.Scanner;
 public class Terrain {
 
 	float [][] height; // regular grid of height values
+	int [][] positions;
 	int dimx, dimy; // data dimensions
 	BufferedImage img; // greyscale image for displaying the terrain top-down
 
@@ -94,12 +95,17 @@ public class Terrain {
 			
 			// populate height grid
 			height = new float[dimx][dimy];
-            
+			positions = new int[dimx][dimy];
+
+			int count = 0;
             //Temporary variable for holding float
            
 			for(int y = 0; y < dimy; y++){
-				for(int x = 0; x < dimx; x++)	
+				for(int x = 0; x < dimx; x++){
 					height[x][y] = Float.parseFloat(sc.next());
+					positions[y][x] = count;
+					count++;
+					}
 				}
 				
 			sc.close(); 

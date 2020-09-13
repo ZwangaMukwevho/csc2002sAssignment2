@@ -5,6 +5,7 @@ public class water {
     private Color color;
     private int x;
     private int y;
+    private int waterDepth;
 
     public water(int x, int y){
         this.x = x;
@@ -15,11 +16,41 @@ public class water {
         return color;
     }
 
+    public int getX(){
+        return x;
+    }
+
+    public int getY(){
+        return y;
+    }
+
+
+    public int getWaterDepth(){
+        return waterDepth;
+    }
+
+    public void increamentDepth(){
+        waterDepth++;
+    }
+
+    public void decreamenetDepth(){
+        waterDepth--;
+    }
+
+    public void setWaterDepth(){
+        waterDepth = 4;
+    }
+
     public void draw(Graphics g){
     g.setColor(Color.BLUE);
-    g.fillOval(x, y, 100, 100);
+    g.fillRect(x, y, 3, 3);
+    
+    }
     
 
+    public void drawFlow(Graphics g){
+        g.setColor(Color.BLUE);
+        g.fillRect(x, y, 1, 1);
     }
 
 }
