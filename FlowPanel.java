@@ -38,15 +38,18 @@ public class FlowPanel extends JPanel implements Runnable {
 		}
 	}
 
-	private ArrayList<water> Water = new ArrayList<water>();
+	private ArrayList<water> WaterList = new ArrayList<water>();
 	private ArrayList<water> Water2 = new ArrayList<water>();
 	waterPainter waterPobj = new waterPainter();
 	water waterObj;
 	water waterObj2;
+	
+
 	int check = 0;
 	String fileName = "medsample_in.txt";
-	int[][] depthArray = waterPobj.waterDepArray();
+	float[][] depthArray = waterPobj.waterDepArray();
 	int tempDepth;
+	int tempPos [] = new int[2];
 
 	
 	public void readData(){
@@ -55,7 +58,8 @@ public class FlowPanel extends JPanel implements Runnable {
 	
 	public void addWater(water W){
 		W.setWaterDepth();
-		Water.add(W);
+		depthArray[W.getX()][W.getY()] = waterPobj.convertWater(W.getWaterDepth());
+		WaterList.add(W);
 		
 		this.repaint();
 	}
@@ -63,36 +67,54 @@ public class FlowPanel extends JPanel implements Runnable {
 	
 	
 	public void flow() {
+		//int size = water.get
+		
+		
+		waterObj = WaterList.get(0);
 
-	
-		startFlow = 1;
-		waterObj = Water.get(0);
-			x = waterObj.getX();
-			y = waterObj.getY();
-	
-			for(int i = 0; i<100;i++){
-	
-				if(check == 0){
-					depthArray[x][y] = waterObj.getWaterDepth();
-					System.out.println(depthArray[x][y]+" "+x+" "+y);
-					newPos = waterPobj.compare(x, y,fileName );
-					//System.out.println(y+ " "+x);
-					check = 1;
-				}
-				else{
-					try{
-					newPos = waterPobj.compare(newPos[0], newPos[1],fileName );}
-					catch(Exception e){
-						;
+		//Getting size of water objectsd
+		int size = WaterList.size();
+		boolean check;
+
+		//while(size!=0){
+
+			for(int i = 0; i<size;i++){
+				
+				x = WaterList.get(i).getX();
+				y = WaterList.get(i).getY();
+				newPos = waterPobj.compare(x, y,fileName,depthArray );
+
+				//Checking if there's a basin
+				if(!(newPos[0]==0 || newPos[0]==0)){
+					//Decreasing depth
+					WaterList.get(i).decreamenetDepth();
+					waterPobj.decrementDepth(depthArray, newPos);
+
+
+					//Checking if there new position is already initialised with a water object
+					check =  waterPobj.check(depthArray,newPos);
+					//System.out.println(depthArray[newPos[0]][newPos[1]]);
+					if(check){
+						waterObj2 = new water(newPos[0],newPos[1]);
+						waterObj2.increamentDepth();
+						waterPobj.inreamentDepth(depthArray, newPos);
+						//System.out.println(waterObj2.getWaterDepth());
 					}
-				}
-				waterObj2 = new water(newPos[0],newPos[1]);
-				Water2.add(waterObj2);
-			
-				this.repaint();
-							}
+					else{
+						waterObj2 = waterPobj.find(WaterList,newPos[0],newPos[1]);
+						waterObj2.increamentDepth();
+						waterPobj.inreamentDepth(depthArray, newPos);
+						System.out.println(waterObj2.getWaterDepth());
+					}				
+					
+						}
 	
-		}
+			}// End of for loop
+		//}//End of while loop
+		
+						}
+
+		
 	
 		
 	
@@ -100,16 +122,23 @@ public class FlowPanel extends JPanel implements Runnable {
 	public void paint(Graphics g){
 		if (startFlow == 0){
 		g.drawImage(land.getImage(), 0, 0, null);
-		for (water waterObject: Water){
+		for (water waterObject: WaterList){
 			waterObject.draw(g);
 		}}
 		else{
 			
 			g.drawImage(land.getImage(), 0, 0, null);
+			int counter = 0;
 			for (water waterObject1: Water2){
-				waterObject1.drawFlow(g);
+				
+			
+					waterObject1.drawFlow(g);
+				
+				
+				//counter++;
 				
 			}
+			counter = 0;
 		}
 	}
 	

@@ -11,7 +11,25 @@ public class MouseClick extends MouseAdapter {
     
     @Override
     public void mouseClicked(MouseEvent e){
-       panel.addWater(new water(e.getX(),e.getY()));
+        //water waterObj = new water(e.getX(),e.getY());
+        //waterObj.setWaterDepth();
+        //panel.addWater(waterObj);
+
+        water waterObj1 = new water(e.getX()+1,e.getY());
+        waterObj1.setWaterDepth();
+        panel.addWater(waterObj1);
+
+       water waterObj2 = new water(e.getX()-1,e.getY());
+        waterObj2.setWaterDepth();
+        panel.addWater(waterObj2);
+
+        water waterObj3 = new water(e.getX(),e.getY()-1);
+        waterObj3.setWaterDepth();
+        panel.addWater(waterObj3);
+
+        water waterObj4 = new water(e.getX(),e.getY()+1);
+        waterObj4.setWaterDepth();
+        panel.addWater(waterObj4);
        
     }
 }

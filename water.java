@@ -50,7 +50,7 @@ public class water {
 
     public void drawFlow(Graphics g){
         g.setColor(Color.BLUE);
-        g.fillRect(x, y, 1, 1);
+        g.fillRect(x, y, 3, 3);
     }
 
 }

@@ -1,8 +1,8 @@
-
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 public class waterPainter {
 	Terrain land = new Terrain() ;
-
+	private DecimalFormat df = new DecimalFormat("0.00");
 
 	public static void main(String[] args){
 		Terrain land = new Terrain() ;
@@ -42,10 +42,10 @@ public class waterPainter {
 			if(list.get(j) == index){
 				land.getPermute(j,pos);
 				height = landHeight[pos[0]][pos[1]];
-				//System.out.println(pos[0]+" "+pos[1]);
+				
 			}
 		}
-		System.out.println(lowest_pos[0]+" "+lowest_pos[1]);
+		//System.out.println(lowest_pos[0]+" "+lowest_pos[1]);
 		int int_pos [] = new int[8];
 		createIndexes(int_pos,matrix,pos[0],pos[1]);
 	
@@ -59,7 +59,7 @@ public class waterPainter {
 					if(list.get(j) == index){
 						land.getPermute(j,pos);
 						temp_height = landHeight[pos[0]][pos[1]];
-						//System.out.println(pos[0]+" "+pos[1]);
+						
 					}
 				}
 
@@ -86,31 +86,82 @@ public class waterPainter {
 					height = temp_height;
 					lowest_pos[0] = pos[0];
 					lowest_pos[1] = pos[1];
-					System.out.println(lowest_pos[0]+" "+lowest_pos[1]);
+					//System.out.println(lowest_pos[0]+" "+lowest_pos[1]);
 				}
-				//System.out.println(pos[0]+" "+pos[1]);
+				
 			}
 
 		}
 
 		// Updating lowest 
-		//System.out.println(height);
-		System.out.println(lowest_pos[0]+" "+lowest_pos[1]);
+	
+		//System.out.println(lowest_pos[0]+" "+lowest_pos[1]);
 	
 	}
 
-	public int [][] waterDepArray(){
+	public float [][] waterDepArray(){
 		land.readData("medsample_in.txt");
 
-		int [][] depthArray = new int[land.dimx][land.dimy];
+		float [][] depthArray = new float[land.dimx][land.dimy];
 		return depthArray;
 	}
+
+	public void inreamentDepth( float [][] heightArr, int [] pos){
+		int x = pos[0];
+		int y = pos[1];
+		float tempHeight = heightArr[x][y];
+		heightArr[x][y] = (float)(tempHeight+ 0.01);
+	}
+
+	public void decrementDepth( float [][] heightArr, int [] pos){
+		int x = pos[0];
+		int y = pos[1];
+		float tempHeight = heightArr[x][y];
+		if(tempHeight!=0){
+		heightArr[x][y] = (float)(tempHeight- 0.01);}
+	}
+
+	public float convertWater(int waterValue){
+		float value = (float) (waterValue / 100.00);
+		
+		return value;
+	}
+
+	// Method that does the arraylist with waterObjects and returns the water object at x and y
+	public water find(ArrayList<water> waterArray, int x, int y){
+		int xPos;
+		int yPos;
+		
+		for (water waterObject: waterArray){
+			xPos = waterObject.getX();
+			yPos = waterObject.getY();
+
+			if(xPos == x && yPos == y){
+				//wO = waterObject;
+				return waterObject;
+			}
+		}
+		return null;
+	}
+
+
 	
 	
-	public int[] compare (int x,int y,String fileName){
+	public boolean check(float[][] depthArray, int[] posArr){
+		float checkNum= depthArray[posArr[0]][posArr[1]];
+		if(checkNum == 0){
+			return true;
+		}
+		else{
+			return false;
+		}
+
+	}
+	
+	public int[] compare (int x,int y,String fileName, float [][] waterDepth){
 		//Array that returns lowest position
 		int lowest_pos [] = new int[2];
-
+		float [][] waterDep = waterDepth;
 		//Array to hold x and y cooridinates of the grid position read in from the method
 		int [] pos = new int[2];
 
@@ -140,7 +191,7 @@ public class waterPainter {
 		for(int j = 0; j<list.size();j++){
 			if(list.get(j) == index){
 				land.getPermute(j,pos);
-				height = landHeight[pos[0]][pos[1]];
+				height = landHeight[pos[0]][pos[1]]+waterDep[pos[0]][pos[1]];
 			}
 		}
 		
@@ -157,7 +208,7 @@ public class waterPainter {
 				for(int j = 0; j<list.size();j++){
 					if(list.get(j) == index){
 						land.getPermute(j,pos);
-						temp_height = landHeight[pos[0]][pos[1]];
+						temp_height = landHeight[pos[0]][pos[1]]+waterDep[pos[0]][pos[1]];
 						
 					}
 				}
@@ -176,7 +227,7 @@ public class waterPainter {
 				for(int j = 0; j<list.size();j++){
 					if(list.get(j) == index){
 						land.getPermute(j,pos);
-						temp_height = landHeight[pos[0]][pos[1]];
+						temp_height = landHeight[pos[0]][pos[1]]+waterDep[pos[0]][pos[1]];
 						
 					}
 				}
@@ -190,9 +241,7 @@ public class waterPainter {
 			}
 
 		}
-		if(lowest_pos[0] == 0 || lowest_pos[1]==0){
-			return null;
-		}
+		
 		return lowest_pos;
 	}
 
