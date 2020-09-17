@@ -54,6 +54,7 @@ public class Flow  {
 		endB.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				// to do ask threads to stop
+				fp.stop();
 				frame.dispose();
 				
 			}

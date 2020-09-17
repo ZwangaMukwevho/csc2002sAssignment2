@@ -7,7 +7,7 @@ public class waterPainter {
 	public static void main(String[] args){
 		Terrain land = new Terrain() ;
 
-		int x = 368;
+		int x = 400;
 		int y = 455;
 		//Array that returns lowest position
 		int lowest_pos [] = new int[2];
@@ -32,20 +32,15 @@ public class waterPainter {
 
 		float [][] landHeight = land.height;
 		int index = x*xWidth + y;
+		System.out.println(x+" "+y);
 		float height = 0;
 		float temp_height = 0;
 		int count = 0;
 
 
-		
-		for(int j = 0; j<list.size();j++){
-			if(list.get(j) == index){
-				land.getPermute(j,pos);
-				height = landHeight[pos[0]][pos[1]];
-				
-			}
-		}
-		//System.out.println(lowest_pos[0]+" "+lowest_pos[1]);
+		pos[0] = x;
+		pos[1] = y;
+		height = landHeight[x][y];
 		int int_pos [] = new int[8];
 		createIndexes(int_pos,matrix,pos[0],pos[1]);
 	
@@ -54,14 +49,8 @@ public class waterPainter {
 			
 			if(count != 0){
 				index = int_pos[i];
-
-				for(int j = 0; j<list.size();j++){
-					if(list.get(j) == index){
-						land.getPermute(j,pos);
-						temp_height = landHeight[pos[0]][pos[1]];
-						
-					}
-				}
+				land.locate(index, pos);
+				temp_height = landHeight[pos[0]][pos[1]];
 
 				if(temp_height<height){
 					height = temp_height;
@@ -73,14 +62,9 @@ public class waterPainter {
 			else{
 				index = int_pos[i];
 				count = 1;
-				
-				for(int j = 0; j<list.size();j++){
-					if(list.get(j) == index){
-						land.getPermute(j,pos);
-						temp_height = landHeight[pos[0]][pos[1]];
-					
-					}
-				}
+				land.locate(index, pos);
+				temp_height =  landHeight[pos[0]][pos[1]];
+
 
 				if(temp_height<height){
 					height = temp_height;
@@ -95,7 +79,7 @@ public class waterPainter {
 
 		// Updating lowest 
 	
-		//System.out.println(lowest_pos[0]+" "+lowest_pos[1]);
+		System.out.println(lowest_pos[0]+" "+lowest_pos[1]);
 	
 	}
 
@@ -210,18 +194,15 @@ public class waterPainter {
 
 		float [][] landHeight = land.height;
 		int index = x*xWidth + y;
+		//System.out.println(x+" "+y);
 		float height = 0;
 		float temp_height = 0;
 		int count = 0;
-
-
 		
-		for(int j = 0; j<list.size();j++){
-			if(list.get(j) == index){
-				land.getPermute(j,pos);
-				height = landHeight[pos[0]][pos[1]]+waterDep[pos[0]][pos[1]];
-			}
-		}
+		pos[0] = x;
+		pos[1] = y;
+		height = landHeight[x][y]+waterDep[x][y];
+		
 		
 		int int_pos [] = new int[8];
 		createIndexes(int_pos,matrix,pos[0],pos[1]);
@@ -231,15 +212,8 @@ public class waterPainter {
 			
 			if(count != 0){
 				index = int_pos[i];
-
-
-				for(int j = 0; j<list.size();j++){
-					if(list.get(j) == index){
-						land.getPermute(j,pos);
-						temp_height = landHeight[pos[0]][pos[1]]+waterDep[pos[0]][pos[1]];
-						
-					}
-				}
+				land.locate(index, pos);
+				temp_height = landHeight[pos[0]][pos[1]]+waterDep[pos[0]][pos[1]];
 
 				if(temp_height<height){
 					height = temp_height;
@@ -251,14 +225,8 @@ public class waterPainter {
 			else{
 				index = int_pos[i];
 				count = 1;
-				
-				for(int j = 0; j<list.size();j++){
-					if(list.get(j) == index){
-						land.getPermute(j,pos);
-						temp_height = landHeight[pos[0]][pos[1]]+waterDep[pos[0]][pos[1]];
-						
-					}
-				}
+				land.locate(index, pos);
+				temp_height = landHeight[pos[0]][pos[1]]+waterDep[pos[0]][pos[1]];
 
 				if(temp_height<height){
 					height = temp_height;

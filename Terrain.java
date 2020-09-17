@@ -12,7 +12,7 @@ public class Terrain {
 	water [][] waterItems;
 	int dimx, dimy; // data dimensions
 	BufferedImage img; // greyscale image for displaying the terrain top-down
-
+	float maxh, minh;
 	ArrayList<Integer> permute;	// permuted list of integers in range [0, dimx*dimy)
 	
 	// overall number of elements in the height grid
@@ -84,12 +84,14 @@ public class Terrain {
 
 	void normalColor(int x, int y){
 		float maxh = -10000.0f, minh = 10000.0f;
+		
 		float val = (height[x][y] - minh) / (maxh - minh);
 		Color col = new Color(val, val, val, 1.0f);
 		img.setRGB(x, y, col.getRGB());
 	}
 
 	void blueColor(int x, int y){
+		
 		img.setRGB(x, y, Color.blue.getRGB());
 	}
 	
