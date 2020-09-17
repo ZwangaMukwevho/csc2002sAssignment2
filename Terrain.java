@@ -10,6 +10,7 @@ public class Terrain {
 	float [][] height; // regular grid of height values
 	int [][] positions;
 	water [][] waterItems;
+	Color [][] colorArray;
 	int dimx, dimy; // data dimensions
 	BufferedImage img; // greyscale image for displaying the terrain top-down
 	float maxh, minh;
@@ -47,7 +48,7 @@ public class Terrain {
 	{
 		img = new BufferedImage(dimx, dimy, BufferedImage.TYPE_INT_ARGB);
 		float maxh = -10000.0f, minh = 10000.0f;
-		
+		colorArray = new Color[dimx][dimy];
 		// determine range of heights
 		for(int x=0; x < dimx; x++)
 			for(int y=0; y < dimy; y++) {
@@ -63,6 +64,7 @@ public class Terrain {
 				 // find normalized height value in range
 				 float val = (height[x][y] - minh) / (maxh - minh);
 				 Color col = new Color(val, val, val, 1.0f);
+				 colorArray[x][y] = col;
 				 img.setRGB(x, y, col.getRGB());
 			}
 	}
@@ -83,11 +85,8 @@ public class Terrain {
 	}
 
 	void normalColor(int x, int y){
-		float maxh = -10000.0f, minh = 10000.0f;
 		
-		float val = (height[x][y] - minh) / (maxh - minh);
-		Color col = new Color(val, val, val, 1.0f);
-		img.setRGB(x, y, col.getRGB());
+		img.setRGB(x, y, colorArray[x][y].getRGB());
 	}
 
 	void blueColor(int x, int y){

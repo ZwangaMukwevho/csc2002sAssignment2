@@ -114,12 +114,16 @@ public class FlowPanel extends JPanel implements Runnable {
 
 				waterDepth = currentWater.getWaterDepth();
 				
-				if(xPos!=0 || yPos !=0 ){
+				if(xPos!=0){
+					if(yPos !=0){
 				//Checking if the current pixel has water
 			 	if(waterDepth!=0){
 					
 					//Finding the lowest closest position
+					
+					
 					newPos = waterPobj.compare(xPos, yPos,fileName,depthArray );
+					
 					lowestWater = land.waterItems[newPos[0]][newPos[1]];
 
 					//Colouring the new position
@@ -135,21 +139,20 @@ public class FlowPanel extends JPanel implements Runnable {
 
 					//Checking the current water object has water
 					if(currentWater.getWaterDepth() == 0){
-						land.normalColor(xPos, yPos);
+					land.normalColor(xPos, yPos);
 					}
 					else{
 						//reshade the current pixel
 						land.blueColor(xPos, yPos);
 					}
 					
-				 }}
+				 }}}
 				 
 				 this.repaint();
 				
 					
 						}// End of for loop
-				System.out.println("done");					
-					
+				
 				size = WaterList.size();
 				//System.out.println(size);
 				//System.out.println(size);
