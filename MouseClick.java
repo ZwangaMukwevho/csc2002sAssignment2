@@ -1,8 +1,10 @@
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.Color;
 
 public class MouseClick extends MouseAdapter {
 
+    Terrain land;
     private FlowPanel panel;
     public MouseClick(FlowPanel p){
         super();
@@ -15,18 +17,7 @@ public class MouseClick extends MouseAdapter {
         //waterObj.setWaterDepth();
         //panel.addWater(waterObj);
 
-        water waterObj1;
-        waterObj1 = new water(e.getX()+1,e.getY());
-        waterObj1.setWaterDepth();
-        panel.addWater(waterObj1);
-        
+        panel.fillWater(e.getX(), e.getY());
 
-       for(int i = 1; i<=7;i++){
-         for(int j = 1;j<=7;j++){
-             waterObj1 = new water(e.getX()+i,e.getY()+j);
-            waterObj1.setWaterDepth();
-            panel.addWater(waterObj1);}
-       }
-       
     }
 }

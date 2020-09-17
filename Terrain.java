@@ -9,6 +9,7 @@ public class Terrain {
 
 	float [][] height; // regular grid of height values
 	int [][] positions;
+	water [][] waterItems;
 	int dimx, dimy; // data dimensions
 	BufferedImage img; // greyscale image for displaying the terrain top-down
 
@@ -68,7 +69,7 @@ public class Terrain {
 	
 	// generate a permuted list of linear index positions to allow a random
 	// traversal over the terrain
-	void genPermute() {
+	synchronized void  genPermute() {
 		permute = new ArrayList<Integer>();
 		for(int idx = 0; idx < dim(); idx++)
 			permute.add(idx);
@@ -77,8 +78,19 @@ public class Terrain {
 	
 	// find permuted 2D location from a linear index in the
 	// range [0, dimx*dimy)
-	void getPermute(int i, int [] loc) {
+	synchronized void getPermute(int i, int [] loc) {
 		locate(permute.get(i), loc);
+	}
+
+	void normalColor(int x, int y){
+		float maxh = -10000.0f, minh = 10000.0f;
+		float val = (height[x][y] - minh) / (maxh - minh);
+		Color col = new Color(val, val, val, 1.0f);
+		img.setRGB(x, y, col.getRGB());
+	}
+
+	void blueColor(int x, int y){
+		img.setRGB(x, y, Color.blue.getRGB());
 	}
 	
 	// read in terrain from file
@@ -96,6 +108,7 @@ public class Terrain {
 			// populate height grid
 			height = new float[dimx][dimy];
 			positions = new int[dimx][dimy];
+			waterItems = new water[dimx][dimy];
 
 			int count = 0;
             //Temporary variable for holding float
@@ -103,6 +116,7 @@ public class Terrain {
 			for(int y = 0; y < dimy; y++){
 				for(int x = 0; x < dimx; x++){
 					height[x][y] = Float.parseFloat(sc.next());
+					waterItems[x][y] = new water(x, y);
 					positions[y][x] = count;
 					count++;
 					}

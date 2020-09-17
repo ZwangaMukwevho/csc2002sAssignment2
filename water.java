@@ -1,6 +1,7 @@
 import java.awt.Color;
 import java.awt.Graphics;
 
+
 public class water {
     private Color color;
     private int x;
@@ -25,21 +26,24 @@ public class water {
     }
 
 
-    public int getWaterDepth(){
+    public synchronized int getWaterDepth(){
         return waterDepth;
     }
 
-    public void increamentDepth(){
+    public synchronized void increamentDepth(){
         waterDepth++;
     }
 
-    public void decreamenetDepth(){
+    public synchronized void decreamenetDepth(){
         waterDepth--;
     }
 
-    public void setWaterDepth(){
+    public synchronized void setWaterDepth(){
         waterDepth = 4;
     }
+
+    
+
 
     public void draw(Graphics g){
     g.setColor(Color.BLUE);

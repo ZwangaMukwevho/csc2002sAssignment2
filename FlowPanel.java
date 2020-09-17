@@ -13,8 +13,8 @@ public class FlowPanel extends JPanel implements Runnable {
 	Terrain land ;
 	static int startFlow = 0;
 	int [] newPos = new int[2];
-	int x;
-	int y;
+	int x1;
+	int y1;
 
 	FlowPanel(Terrain terrain) {
 		land=terrain;
@@ -44,9 +44,10 @@ public class FlowPanel extends JPanel implements Runnable {
 	water waterObj;
 	water waterObj2;
 	water waterObj3;
+	boolean check = true;
 	
 
-	int check = 0;
+	
 	String fileName = "medsample_in.txt";
 	float[][] depthArray = waterPobj.waterDepArray();
 	int tempDepth;
@@ -57,11 +58,20 @@ public class FlowPanel extends JPanel implements Runnable {
 		land.readData(fileName);
 	}
 	
-	public void addWater(water W){
-		W.setWaterDepth();
-		depthArray[W.getX()][W.getY()] = waterPobj.convertWater(W.getWaterDepth());
-		WaterList.add(W);
-		
+	
+	public void fillWater(int x, int y) {
+		x1 = x;
+		y1 = y;
+		land.img.setRGB(x,y,Color.BLUE.getRGB());
+		land.waterItems[x][y].setWaterDepth();
+		depthArray[x][y] = (float)(0.04);
+
+		for(int i = x-3; i<=x+4;i++){
+			for(int j = y-3;j<=y+3;j++){
+				depthArray[x][y] = (float)(0.04);
+				land.img.setRGB(i,j,Color.BLUE.getRGB());
+				land.waterItems[i][j].setWaterDepth();}
+		  }
 		this.repaint();
 	}
 	
@@ -69,91 +79,86 @@ public class FlowPanel extends JPanel implements Runnable {
 	
 	public void flow() {
 		//int size = water.get
-		startFlow = 1;
+		
 		int count = 0;
 		int xPos;
 		int yPos;
 		
-		waterObj = WaterList.get(0);
-
+		
+		
 		//Getting size of water objectsd
-		int size = WaterList.size();
-		boolean check;
 
-		while(size!=0){
+		//Defining variables that will be used in the loop
+		int size = land.dim();
+		
+		float waterDepth;
+		int tempIndex = 0;
+		
+		float tempDepth;
 
-			for(int i = 0; i<size;i++){
+		// current water node
+		water currentWater;
+		water lowestWater;
 
-				//getting node that is being currently processed
-				waterObj = WaterList.get(i);
+		for(int i = 0; i<size;i++){
 
-				x = WaterList.get(i).getX();
-				y = WaterList.get(i).getY();
-				newPos = waterPobj.compare(x, y,fileName,depthArray );
-
-				//Checking if there's a basin
-				if(!(newPos[0]==0 || newPos[0]==0)){
-
-					//Decreasing depth
-					waterObj.decreamenetDepth();
-					waterPobj.decrementDepth(depthArray, newPos);
-					
-
-					//Checking if there new position is already initialised with a water object
-					check =  waterPobj.check(WaterList,newPos);
-					//System.out.println(depthArray[newPos[0]][newPos[1]]);
-					if(check){
-						waterObj2 = new water(newPos[0],newPos[1]);
-						waterObj2.increamentDepth();
-						waterPobj.inreamentDepth(depthArray, newPos);
-						WaterList.add(waterObj2);
-						//System.out.println(waterObj2.getWaterDepth());
-					}
-					else{
-						waterObj2 = waterPobj.find(WaterList,newPos[0],newPos[1]);
-						
-						waterObj2.increamentDepth();
-						waterPobj.inreamentDepth(depthArray, newPos);
-						//System.out.println(depthArray[newPos[0]][newPos[1]]);
-					}				
-					
-					//removing waterObj that has zero length
-					if(waterObj.getWaterDepth()<=0){
-						
-						Iterator<water> iter = WaterList.iterator();
-						while(iter.hasNext()){
-							waterObj3 = iter.next();
-							xPos = waterObj3.getX();
-							yPos = waterObj3.getY();
+				// Obtaining random position to permute
+				land.locate(i, tempPos);
 				
-							if(xPos == x && yPos == y){
-								//wO = waterObject;
-								iter.remove();
-							}
-							count++;
-						}
+				// Getting x and y position of the temporay chosen position
+				xPos = tempPos[0];
+				yPos = tempPos[1];
+				
+				// Checking of that current position has water
+				currentWater = land.waterItems[xPos][yPos];
 
-						
-						count = 0;
+				waterDepth = currentWater.getWaterDepth();
+				
+				
+				//Checking if the current pixel has water
+			 	if(waterDepth!=0){
+					System.out.println(xPos+" "+yPos);
+					//Finding the lowest closest position
+					newPos = waterPobj.compare(xPos, yPos,fileName,depthArray );
+					lowestWater = land.waterItems[newPos[0]][newPos[1]];
+
+					//Colouring the new position
+					land.blueColor(newPos[0], newPos[1]);
+
+					//Increasing and decreasing the waterDepth to indicate transfering of water
+					waterPobj.inreamentDepth(depthArray, newPos);
+					waterPobj.decrementDepth(depthArray, tempPos);
+
+					// Increasing and decreasing the waterdepth for current and lowest water object
+					currentWater.decreamenetDepth();
+					lowestWater.increamentDepth();
+
+					//Checking the current water object has water
+					if(currentWater.getWaterDepth() == 0){
+						land.normalColor(xPos, yPos);
 					}
-
-						}
 					
+				 }
+				 
+				 this.repaint();
+				
+					
+						}// End of for loop
+				System.out.println("done");					
 					
 				size = WaterList.size();
 				//System.out.println(size);
-				this.repaint();
-			}// End of for loop
+				//System.out.println(size);
+				//this.repaint();
+			}
 			
-		}//End of while loop
-		
-						}
+						
 
 		
 	
 		
 	
-	@Override 
+	/*@Override 
 	public void paint(Graphics g){
 		if (startFlow == 0){
 		g.drawImage(land.getImage(), 0, 0, null);
@@ -164,19 +169,30 @@ public class FlowPanel extends JPanel implements Runnable {
 			g.drawImage(land.getImage(), 0, 0, null);
 			int counter = 0;
 			for (water waterObject1: WaterList){
+					
 					waterObject1.drawFlow(g);
 			}
 			counter = 0;
 		}
-	}
+	}*/
 	
+	public void stop(){
+		check = false;
+	}
 	public  void run() {	
 		// display loop here
 		// to do: this should be controlled by the GUI		// to allow stopping and starting
+		fillWater(x1, y1);
+		while(check){
+		
 		flow();
+		repaint();}
+	
 
-	    repaint();
+	  
 	}
+
+	
 
 
 	

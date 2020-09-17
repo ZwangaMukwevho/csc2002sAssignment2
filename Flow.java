@@ -55,16 +55,19 @@ public class Flow  {
 			public void actionPerformed(ActionEvent e){
 				// to do ask threads to stop
 				frame.dispose();
+				
 			}
 		});
 
 		playB.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				// to do ask threads to stop
-				Thread fpt = new Thread(fp);
-        		fpt.start();
 				
-			}
+				
+				Thread fpt = new Thread(fp);
+        		fpt.start();}
+				
+			
 		});
 
 		// Editing the button layout and color
