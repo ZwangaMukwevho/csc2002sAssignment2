@@ -11,6 +11,7 @@ public class Flow  {
 	static int frameX;
 	static int frameY;
 	static FlowPanel fp;
+	static volatile boolean checkStart = false;
 
 	// start timer
 	private static void tick(){
@@ -56,20 +57,42 @@ public class Flow  {
 				// to do ask threads to stop
 				fp.stop();
 				frame.dispose();
-				
-			}
-		});
+				}
+			});
 
+		// Adds action listener to the play button that starts the simulation
 		playB.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				// to do ask threads to stop
-				
-				
+				// to do ask threads to play
+
+				if(!(checkStart)){
 				Thread fpt = new Thread(fp);
-        		fpt.start();}
+				fpt.start();
+				checkStart = true;
+								}
+				else{
+					fp.unpause();}
+					}
+			});
+		
+		// Adds action listener to the play button that pauses the simulation
+		pauseB.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				// to do ask threads to pause	
+				fp.pause();}
+				});
+		
+		// Adds action listener to the play button that pauses the simulation
+		resetB.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				// to do ask threads to reset	
+				fp.pause();
+				fp.restart();
 				
-			
-		});
+				}
+				});
+		
+				
 
 		// Editing the button layout and color
 		b.add(Box.createHorizontalGlue()); 

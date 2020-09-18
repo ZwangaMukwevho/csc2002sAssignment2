@@ -12,8 +12,7 @@ import java.util.*;
 public class FlowPanel extends JPanel implements Runnable {
 	Terrain land ;
 	static int startFlow = 0;
-	int [] newPos = new int[2];
-	int [] tempPrev = new int[2];
+	
 	int x1;
 	int y1;
 
@@ -40,12 +39,10 @@ public class FlowPanel extends JPanel implements Runnable {
 	}
 
 	private ArrayList<water> WaterList = new ArrayList<water>();
-	private ArrayList<water> Water2 = new ArrayList<water>();
 	waterPainter waterPobj = new waterPainter();
-	water waterObj;
-	water waterObj2;
-	water waterObj3;
-	boolean check = true;
+	
+	volatile boolean check = true;
+	volatile boolean stop = false;
 	
 
 	
@@ -80,11 +77,16 @@ public class FlowPanel extends JPanel implements Runnable {
 	
 	public void flow() {
 		//int size = water.get
-		
-		int count = 0;
+	
 		int xPos;
 		int yPos;
+		int yWidth = land.dimx -1;
+		int xWidth = land.dimy - 1;
 		
+		int [] newPos = new int[2];
+
+
+		int [] prevCurr = new int[2];
 		
 		
 		//Getting size of water objectsd
@@ -93,9 +95,6 @@ public class FlowPanel extends JPanel implements Runnable {
 		int size = land.dim();
 		
 		float waterDepth;
-		int tempIndex = 0;
-		
-		float tempDepth;
 
 		// current water node
 		water currentWater;
@@ -115,8 +114,8 @@ public class FlowPanel extends JPanel implements Runnable {
 
 				waterDepth = currentWater.getWaterDepth();
 				
-				if(xPos!=0){
-					if(yPos !=0){
+				if(!(xPos == 0 || yPos == 0 || xPos == xWidth || yPos == yWidth)){
+					
 				//Checking if the current pixel has water
 			 	if(waterDepth!=0){
 					
@@ -124,12 +123,14 @@ public class FlowPanel extends JPanel implements Runnable {
 					
 					
 					newPos = waterPobj.compare(xPos, yPos,fileName,depthArray );
-					if(newPos[0]==0 || newPos[1]==0){
-						;
 
+					// This means the water has reached a basin
+					if(newPos[0]==0 && newPos[1]==0){
+						;
 
 					}
 					else{
+
 					lowestWater = land.waterItems[newPos[0]][newPos[1]];
 
 					//Colouring the new position
@@ -151,10 +152,12 @@ public class FlowPanel extends JPanel implements Runnable {
 						//reshade the current pixel
 						land.blueColor(xPos, yPos);
 					}
-					tempPrev[0] = newPos[0];
-					tempPrev[1] = newPos[1];}
+
 					
-				 }//End of waterDepth if
+					prevCurr[0] = tempPos[0];
+					prevCurr[1] = tempPos[1];}
+					
+				 //}//End of waterDepth if
 				}//End of second if
 			}// End of first if
 				 
@@ -169,44 +172,44 @@ public class FlowPanel extends JPanel implements Runnable {
 				//this.repaint();
 			}
 			
-						
 
-		
 	
-		
-	
-	/*@Override 
-	public void paint(Graphics g){
-		if (startFlow == 0){
-		g.drawImage(land.getImage(), 0, 0, null);
-		for (water waterObject: WaterList){
-			waterObject.drawFlow(g);
-		}}
-		else{
-			g.drawImage(land.getImage(), 0, 0, null);
-			int counter = 0;
-			for (water waterObject1: WaterList){
-					
-					waterObject1.drawFlow(g);
-			}
-			counter = 0;
-		}
-	}*/
-	
+	//Boolean that is used to stop the simulation
 	public void stop(){
 		check = false;
 	}
+
+	// Boolean that is used to pause the simulation
+	public void pause(){
+		stop = true;
+	}
+
+	public void unpause(){
+		stop = false;
+	}
+
+	// Reseting
+	public void restart(){
+		int size = land.dim();
+		for(int i = 0; i<size;i++){
+			land.locate(i, tempPos);
+			land.normalColor(tempPos[0], tempPos[1]);
+			land.waterItems[tempPos[0]][tempPos[1]] = new water(tempPos[0],tempPos[1]);
+		}
+	}
+
+	
+
+	//Boolean that is used
 	public  void run() {	
 		// display loop here
 		// to do: this should be controlled by the GUI		// to allow stopping and starting
 		fillWater(x1, y1);
 		while(check){
-		
-		flow();
-		repaint();}
-	
-
-	  
+			if(!(stop)){
+			flow();
+			repaint();}
+		}//end of while loop
 	}
 
 	
