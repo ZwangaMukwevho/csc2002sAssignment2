@@ -73,7 +73,7 @@ public class simClass extends java.lang.Thread  {
 				// Checking of that current position has water
 				currentWater = land.waterItems[xPos][yPos];
 
-				synchronized(currentWater){
+				//synchronized(currentWater){
 				waterDepth = currentWater.getWaterDepth();
 				
 				if(!(xPos == 0 || yPos == 0 || xPos == xWidth || yPos == yWidth)){
@@ -93,7 +93,7 @@ public class simClass extends java.lang.Thread  {
 						else{
 							
 							lowestWater = land.waterItems[newPos[0]][newPos[1]];
-							synchronized(lowestWater){
+							//synchronized(lowestWater){
 							//Colouring the new position
 							land.blueColor(newPos[0], newPos[1]);
 
@@ -116,8 +116,8 @@ public class simClass extends java.lang.Thread  {
 
 					
 						prevCurr[0] = tempPos[0];
-						prevCurr[1] = tempPos[1];}
-						}// End of lowestWater synch
+						prevCurr[1] = tempPos[1];//}// End of lowestWater synch
+						}
 				 
 					}//End of second if
 				}// End of first if
@@ -125,7 +125,7 @@ public class simClass extends java.lang.Thread  {
 			else if((xPos == 0 || yPos == 0 || xPos == xWidth || yPos == yWidth)){
 				land.waterItems[xPos][yPos].resetDepth();
 			}
-		}
+		//}//synchronized 
 				 Flow.fp.repaint();	
 						}// End of for loop
 			}
@@ -146,11 +146,45 @@ public class simClass extends java.lang.Thread  {
 				Flow.fp.repaint();
 		}
 
+	//Boolean that is used to stop Execution the simulation
+	public void stopEx(){
+		check = false;
+	}
+
+	// Boolean that is used to pause the simulation
+	public void pause(){
+		stop = true;
+	}
+
+	public void unpause(){
+		stop = false;
+	}
+
+	// Reseting the thread
+	public void restart(){
+		int tempPos [] = new int[2];
+		int size = land.dim();
+		
+		// Reset everything
+		for(int i = 0; i<size;i++){
+			land.locate(i, tempPos);
+			land.normalColor(tempPos[0], tempPos[1]);
+			land.waterItems[tempPos[0]][tempPos[1]] = new water(tempPos[0],tempPos[1]);
+			depthArray[tempPos[0]][tempPos[1]] = (float)(0.00);
+		}
+
+		
+	}
+
 	@Override
 	public void run() {
-		fillWater(x1, y1);
-		while(true){
-		flow(low,high);}
+		//fillWater(x1, y1);
+		while(check){
+			if(!(stop)){
+				flow(low,high);
+				Flow.fp.repaint();}
+		}//end of while loop
+		
 		
 	}
 }

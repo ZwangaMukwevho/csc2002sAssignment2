@@ -23,10 +23,10 @@ public class waterPainter {
 
 		// Bounds of the grid
 		int xWidth = land.getDimX();
-		int yWidth = land.getDimY();
+		//int yWidth = land.getDimY();
 
 		//List to be permuted
-		ArrayList<Integer> list = land.permute;	
+		//ArrayList<Integer> list = land.permute;	
 
 
 
@@ -45,6 +45,7 @@ public class waterPainter {
 		createIndexes(int_pos,matrix,pos[0],pos[1]);
 	
 		//Loop for comparing result
+		
 		for(int i = 0;i<8;i++){
 			
 			if(count != 0){
@@ -90,14 +91,14 @@ public class waterPainter {
 		return depthArray;
 	}
 
-	public void inreamentDepth( float [][] heightArr, int [] pos){
+	synchronized public void inreamentDepth( float [][] heightArr, int [] pos){
 		int x = pos[0];
 		int y = pos[1];
 		float tempHeight = heightArr[x][y];
 		heightArr[x][y] = (float)(tempHeight+ 0.01);
 	}
 
-	public void decrementDepth( float [][] heightArr, int [] pos){
+	synchronized  public void decrementDepth( float [][] heightArr, int [] pos){
 		int x = pos[0];
 		int y = pos[1];
 		float tempHeight = heightArr[x][y];
@@ -184,13 +185,7 @@ public class waterPainter {
 		int matrix[][] = land.positions;
 
 		// Bounds of the grid
-		int xWidth = land.getDimX();
-		//int yWidth = land.getDimY();
-
-		//List to be permuted
-		ArrayList<Integer> list = land.permute;	
-
-
+		int xWidth = land.getDimX();		
 
 		float [][] landHeight = land.height;
 		int index = x*xWidth + y;
@@ -238,19 +233,20 @@ public class waterPainter {
 
 		}
 		
+		
 		return lowest_pos;
+		
 	}
 
 	//public int [] findCoord(ArrayList<Integer> list, float [][] landheight, int index,int [] pos){
 	//	for(int j = 0; j<list.size();j++){
 	//		if(list.get(j) == index){
 	//			land.getPermute(j,pos);	
-	//		}
 	//	}
 	//	return pos;
 	//}
 
-	public static int[] createIndexes (int []  int_pos ,int [][] matrix, int tempRow, int tempCol){
+	synchronized public static int[] createIndexes (int []  int_pos ,int [][] matrix, int tempRow, int tempCol){
 				int_pos[0] = matrix[tempRow][tempCol-1];
 				int_pos[1] = matrix[tempRow][tempCol+1];
 				int_pos[2] = matrix[tempRow-1][tempCol];

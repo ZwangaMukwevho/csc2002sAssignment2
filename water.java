@@ -26,20 +26,24 @@ public class water {
     }
 
 
-    public synchronized int getWaterDepth(){
+    public int getWaterDepth(){
         return waterDepth;
     }
 
-    public synchronized void increamentDepth(){
+    public void increamentDepth(){
         waterDepth++;
     }
 
-    public synchronized void decreamenetDepth(){
+    public void decreamenetDepth(){
         waterDepth--;
     }
 
-    public synchronized void setWaterDepth(){
+    public void setWaterDepth(){
         waterDepth = 4;
+    }
+
+    public void resetDepth(){
+        waterDepth = 0;
     }
 
     

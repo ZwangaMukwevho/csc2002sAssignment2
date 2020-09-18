@@ -11,6 +11,7 @@ public class Flow  {
 	static int frameX;
 	static int frameY;
 	static FlowPanel fp;
+	static simClass[] sc;
 	static volatile boolean checkStart = false;
 
 	// start timer
@@ -55,6 +56,10 @@ public class Flow  {
 		endB.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				// to do ask threads to stop
+				//sc.stopEx();
+				for(int i = 0;i<4;i++){
+					sc[i].stopEx();;
+				}
 				fp.stop();
 				frame.dispose();
 				}
@@ -68,12 +73,27 @@ public class Flow  {
 				int x = fp.getXclick();
 				int y = fp.getYclick();
 				if(!(checkStart)){
-				Thread simClass = new simClass(landdata,0,landdata.dim(),x,y);
-				simClass.start();
-				
+				sc = new simClass[4];
+				//sc.start();
+
+				int size = landdata.dim();
+					int quarter = size/4;
+					int tempLo ;
+					int tempHi;
+					// Creating the four threads
+					for(int i = 0;i<4;i++){
+						tempLo = i*quarter;
+						tempHi = i*quarter + quarter;
+						sc[i] = new simClass(landdata,tempLo,tempHi,x,y);
+						sc[i].start();
+					}
 				checkStart = true;
 								}
 				else{
+					for(int i = 0;i<4;i++){
+						sc[i].unpause();
+					}
+					//sc.unpause();
 					fp.unpause();}
 					}
 
@@ -85,14 +105,24 @@ public class Flow  {
 		// Adds action listener to the play button that pauses the simulation
 		pauseB.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				// to do ask threads to pause	
-				fp.pause();}
+				// to do ask threads to pause
+				for(int i = 0;i<4;i++){
+					sc[i].pause();;
+				}	
+				//sc.pause();
+				fp.pause();
+								}
 				});
 		
 		// Adds action listener to the play button that pauses the simulation
 		resetB.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				// to do ask threads to reset	
+				for(int i = 0;i<4;i++){
+					sc[i].pause();}
+				for(int i = 0;i<4;i++){
+					sc[i].restart();}
+				
 				fp.pause();
 				fp.restart();
 				
