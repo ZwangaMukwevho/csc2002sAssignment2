@@ -13,6 +13,7 @@ public class FlowPanel extends JPanel implements Runnable {
 	Terrain land ;
 	static int startFlow = 0;
 	int [] newPos = new int[2];
+	int [] tempPrev = new int[2];
 	int x1;
 	int y1;
 
@@ -123,7 +124,12 @@ public class FlowPanel extends JPanel implements Runnable {
 					
 					
 					newPos = waterPobj.compare(xPos, yPos,fileName,depthArray );
-					
+					if(newPos[0]==0 || newPos[1]==0){
+						;
+
+
+					}
+					else{
 					lowestWater = land.waterItems[newPos[0]][newPos[1]];
 
 					//Colouring the new position
@@ -145,8 +151,12 @@ public class FlowPanel extends JPanel implements Runnable {
 						//reshade the current pixel
 						land.blueColor(xPos, yPos);
 					}
+					tempPrev[0] = newPos[0];
+					tempPrev[1] = newPos[1];}
 					
-				 }}}
+				 }//End of waterDepth if
+				}//End of second if
+			}// End of first if
 				 
 				 this.repaint();
 				
