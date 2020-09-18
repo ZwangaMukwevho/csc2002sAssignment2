@@ -64,15 +64,22 @@ public class Flow  {
 		playB.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				// to do ask threads to play
-
+				
+				int x = fp.getXclick();
+				int y = fp.getYclick();
 				if(!(checkStart)){
-				Thread fpt = new Thread(fp);
-				fpt.start();
+				Thread simClass = new simClass(landdata,0,landdata.dim(),x,y);
+				simClass.start();
+				
 				checkStart = true;
 								}
 				else{
 					fp.unpause();}
 					}
+
+				
+				
+					
 			});
 		
 		// Adds action listener to the play button that pauses the simulation
@@ -123,7 +130,8 @@ public class Flow  {
       	frame.add(g); //add contents to window
         frame.setContentPane(g);
         frame.setVisible(true);
-        
+        Thread fpt = new Thread(fp);
+		fpt.start();
 	}
 	
 		
