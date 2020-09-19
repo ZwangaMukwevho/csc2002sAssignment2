@@ -1,10 +1,8 @@
  
 import java.awt.Graphics;
 import javax.swing.JPanel;
-//import java.awt.event.MouseAdapter;
-//import java.awt.event.MouseEvent;
 import java.awt.Color;
-import java.util.*;
+
 
 //import java.awt.*;  
 //mport java.awt.event.*;  
@@ -12,6 +10,7 @@ import java.util.*;
 public class FlowPanel extends JPanel implements Runnable {
 	Terrain land ;
 	static int startFlow = 0;
+	
 	int h;
 	int l;
 	
@@ -32,8 +31,7 @@ public class FlowPanel extends JPanel implements Runnable {
 	// as images
 	@Override
     protected void paintComponent(Graphics g) {
-		int width = getWidth();
-		int height = getHeight();
+		
 		  
 		super.paintComponent(g);
 		g.setColor(Color.BLUE);
@@ -46,7 +44,7 @@ public class FlowPanel extends JPanel implements Runnable {
 		}
 	}
 
-	private ArrayList<water> WaterList = new ArrayList<water>();
+
 	waterPainter waterPobj = new waterPainter();
 	
 	volatile boolean check = true;
@@ -90,100 +88,6 @@ public class FlowPanel extends JPanel implements Runnable {
 	}
 	
 	
-	public void flow(int lo, int hi) {
-		//int size = water.get
-	
-		int xPos;
-		int yPos;
-		int yWidth = land.dimx -1;
-		int xWidth = land.dimy - 1;
-		
-		int [] newPos = new int[2];
-		int [] prevCurr = new int[2];
-		int tempPos [] = new int[2];
-		
-		//Getting size of water objectsd
-
-		//Defining variables that will be used in the loop
-		int size = land.dim();
-		
-		float waterDepth;
-
-		// current water node
-		water currentWater;
-		water lowestWater;
-
-		for(int i = lo; i<hi;i++){
-
-				// Obtaining random position to permute
-				land.locate(i, tempPos);
-				
-				// Getting x and y position of the temporay chosen position
-				xPos = tempPos[0];
-				yPos = tempPos[1];
-				
-				// Checking of that current position has water
-				currentWater = land.waterItems[xPos][yPos];
-
-				synchronized(currentWater){
-				waterDepth = currentWater.getWaterDepth();
-				
-				if(!(xPos == 0 || yPos == 0 || xPos == xWidth || yPos == yWidth)){
-			
-				//Checking if the current pixel has water
-			 		if(waterDepth!=0){
-					
-					//Finding the lowest closest position
-					
-					
-						newPos = waterPobj.compare(xPos, yPos,fileName,depthArray );
-
-					// This means the water has reached a basin
-						if(newPos[0]==0 && newPos[1]==0){
-							;
-						}
-						else{
-							
-							lowestWater = land.waterItems[newPos[0]][newPos[1]];
-							synchronized(lowestWater){
-							//Colouring the new position
-							land.blueColor(newPos[0], newPos[1]);
-
-							//Increasing and decreasing the waterDepth to indicate transfering of water
-							waterPobj.inreamentDepth(depthArray, newPos);
-							waterPobj.decrementDepth(depthArray, tempPos);
-
-							// Increasing and decreasing the waterdepth for current and lowest water object
-							currentWater.decreamenetDepth();
-							lowestWater.increamentDepth();
-
-						//Checking the current water object has water
-						if(currentWater.getWaterDepth() == 0){
-							land.normalColor(xPos, yPos);
-							}
-						else{
-							//reshade the current pixel
-							land.blueColor(xPos, yPos);
-							}
-
-					
-						prevCurr[0] = tempPos[0];
-						prevCurr[1] = tempPos[1];}
-						}// End of lowestWater synch
-				 
-					}//End of second if
-				}// End of first if
-				
-			else if((xPos == 0 || yPos == 0 || xPos == xWidth || yPos == yWidth)){
-				land.waterItems[xPos][yPos].resetDepth();
-			}
-		}
-				 this.repaint();	
-						}// End of for loop
-			}
-			
-
-	
 	//Boolean that is used to stop the simulation
 	public void stop(){
 		check = false;
@@ -214,20 +118,18 @@ public class FlowPanel extends JPanel implements Runnable {
 		
 	}
 
+	boolean d = false;
+	public void checking(){
+		d = true;
+		
+	}
 	
 
 	//Boolean that is used
 	public  void run() {	
 		// display loop here
 		// to do: this should be controlled by the GUI		// to allow stopping and starting
-		///fillWater(x1, y1);
 		
-
-		//while(check){
-		//	if(!(stop)){
-		//	ts.start();
-		//	repaint();}
-		//}//end of while loop
 		
 	}
 

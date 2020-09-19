@@ -112,65 +112,6 @@ public class waterPainter {
 		return value;
 	}
 
-	public boolean check(ArrayList<water> waterArray, int[] posArr){
-		int xPos;
-		int yPos;
-		int x = posArr[0];
-		int y = posArr[1];
-		
-		for (water waterObject: waterArray){
-			xPos = waterObject.getX();
-			yPos = waterObject.getY();
-			if(xPos == x && yPos == y){
-				//wO = waterObject;
-				return false;			
-			}
-		}
-		
-		return true;
-
-	}
-
-	// Method that does the arraylist with waterObjects and returns the water object at x and y
-	public water find(ArrayList<water> waterArray, int x, int y){
-		int xPos;
-		int yPos;
-		
-		for (water waterObject: waterArray){
-			xPos = waterObject.getX();
-			yPos = waterObject.getY();
-			//System.out.println(xPos+" "+yPos);
-			if(xPos == x && yPos == y){
-				return waterObject;
-				
-			}
-		}
-		return null;
-	}
-
-	//Removes water object that has no water layers from the waterlist
-	public synchronized void removeWater(ArrayList<water> waterArray, int x, int y){
-		int xPos;
-		int yPos;
-		int count = 0;
-		for (water waterObject: waterArray){
-			xPos = waterObject.getX();
-			yPos = waterObject.getY();
-
-			if(xPos == x && yPos == y){
-				//wO = waterObject;
-				waterArray.remove(count);
-			}
-			count++;
-		}
-		
-	}
-
-
-	
-	
-
-	
 	public int[] compare (int x,int y,String fileName, float [][] waterDepth){
 		//Array that returns lowest position
 		int lowest_pos [] = new int[2];
